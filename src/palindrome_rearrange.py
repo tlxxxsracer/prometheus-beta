@@ -71,26 +71,27 @@ def rearrange_to_palindrome(s: str) -> str:
     if not can_form_palindrome(s):
         return ''
     
-    # Sort characters to ensure consistent output
-    unique_chars = sorted(char_counts.keys())
+    # Collect characters to form palindrome
+    left = []
+    middle = ''
     
-    # Attempt to construct palindrome
-    left_half = []
-    center = ''
-    
-    for char in unique_chars:
-        # Get count for this character
-        count = char_counts[char]
+    # Collect pairs of characters and one middle character if needed
+    for char, count in sorted(char_counts.items()):
+        # Add half of the occurrences to the left side
+        pairs = count // 2
+        left.extend([char] * pairs)
         
-        # Add pairs to left half
-        left_half.extend([char] * (count // 2))
-        
-        # Find potential center character (the first one with odd count)
-        if count % 2 != 0 and not center:
-            center = char
+        # Find the character with odd frequency to be the middle 
+        if count % 2 != 0:
+            if not middle:
+                middle = char
     
-    # Complete palindrome
-    right_half = list(reversed(left_half))
+    # Make right side a reverse of left side
+    right = list(reversed(left))
     
-    # Construct final palindrome
-    return ''.join(left_half + ([center] if center else []) + right_half)
+    # If no palindrome possible with these characters, return empty string
+    if (len(left) * 2 + (1 if middle else 0)) != len(s):
+        return ''
+    
+    # Construct and return the palindrome
+    return ''.join(left + ([middle] if middle else []) + right)
