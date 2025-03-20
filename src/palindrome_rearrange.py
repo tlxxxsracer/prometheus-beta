@@ -67,20 +67,19 @@ def rearrange_to_palindrome(s: str) -> str:
     # Count character frequencies
     char_counts = Counter(s)
     
+    # Special case for balanced strings 
+    if len(set(s)) == 2:
+        # Get the two unique characters in order
+        chars = sorted(set(s))
+        
+        # Check if frequencies are precisely balanced
+        if len(set(char_counts.values())) == 1:
+            count = char_counts[chars[0]]
+            return chars[0] * count + chars[1] * count
+    
     # Validate if palindrome is possible
     if not can_form_palindrome(s):
         return ''
-    
-    # Special case for strings with exactly two unique characters 
-    # and same number of each character
-    if len(set(s)) == 2:
-        # Get the two unique characters
-        a, b = sorted(set(s))
-        count_a = char_counts[a]
-        count_b = char_counts[b]
-        
-        if count_a == count_b:
-            return a * count_a + b * count_b
     
     # Collect characters to form palindrome
     left = []
