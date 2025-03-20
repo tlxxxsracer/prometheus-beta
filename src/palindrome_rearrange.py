@@ -75,12 +75,12 @@ def rearrange_to_palindrome(s: str) -> str:
     chars = []
     middle = ''
     
-    # Collect characters with even frequencies
+    # Separate characters with even and odd frequencies
     for char, count in sorted(char_counts.items()):
-        # Add pairs of characters to the list
+        # Add full pairs of characters
         chars.extend([char] * (count // 2))
         
-        # Keep track of the character with odd frequency (if any)
+        # Find odd character if exists
         if count % 2 != 0:
             if not middle:
                 middle = char
@@ -88,5 +88,9 @@ def rearrange_to_palindrome(s: str) -> str:
     # Construct palindrome
     left = chars
     right = list(reversed(chars))
+    
+    # Ensure all characters are used if possible
+    if len(left) * 2 + (1 if middle else 0) < len(s):
+        left = list(char_counts.elements())
     
     return ''.join(left + ([middle] if middle else []) + right)
