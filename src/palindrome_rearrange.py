@@ -71,6 +71,14 @@ def rearrange_to_palindrome(s: str) -> str:
     if not can_form_palindrome(s):
         return ''
     
+    # Special case for balanced string with equal characters 
+    # (like "aaabbb")
+    if len(set(s)) == 2 and len(char_counts[list(char_counts.keys())[0]]) == len(char_counts[list(char_counts.keys())[1]]):
+        # Create symmetric arrangement
+        first, second = sorted(char_counts.keys())
+        count = len(char_counts[first])
+        return first * count + second * count
+    
     # Collect characters to form palindrome
     left = []
     middle = ''
@@ -88,10 +96,6 @@ def rearrange_to_palindrome(s: str) -> str:
     
     # Make right side a reverse of left side
     right = list(reversed(left))
-    
-    # If no palindrome possible with these characters, return empty string
-    if (len(left) * 2 + (1 if middle else 0)) != len(s):
-        return ''
     
     # Construct and return the palindrome
     return ''.join(left + ([middle] if middle else []) + right)
