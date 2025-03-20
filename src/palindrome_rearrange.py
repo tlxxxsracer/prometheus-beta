@@ -71,17 +71,16 @@ def rearrange_to_palindrome(s: str) -> str:
     if not can_form_palindrome(s):
         return ''
     
-    # Special case for balanced strings
-    unique_chars = sorted(char_counts.keys())
-    if len(unique_chars) == 2:
-        # Check if the counts are equal
-        first, second = unique_chars
-        first_count = char_counts[first]
-        second_count = char_counts[second]
+    # Special case for strings with exactly two unique characters 
+    # and same number of each character
+    if len(set(s)) == 2:
+        # Get the two unique characters
+        a, b = sorted(set(s))
+        count_a = char_counts[a]
+        count_b = char_counts[b]
         
-        if first_count == second_count:
-            # Create symmetric palindrome
-            return first * first_count + second * second_count
+        if count_a == count_b:
+            return a * count_a + b * count_b
     
     # Collect characters to form palindrome
     left = []
