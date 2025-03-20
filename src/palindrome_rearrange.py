@@ -60,6 +60,10 @@ def rearrange_to_palindrome(s: str) -> str:
     if not isinstance(s, str):
         raise TypeError("Input must be a string")
     
+    # Special case: if original string is already a palindrome, return it
+    if len(s) <= 1 or s == s[::-1]:
+        return s
+    
     # Validate if palindrome is possible
     if not can_form_palindrome(s):
         return ''
@@ -67,24 +71,22 @@ def rearrange_to_palindrome(s: str) -> str:
     # Count character frequencies
     char_counts = Counter(s)
     
-    # Separate characters with even and odd counts
-    even_chars = []
-    odd_char = None
+    # Prepare characters for palindrome
+    chars = []
+    middle = ''
     
-    # Build the palindrome
+    # Collect characters with even frequencies
     for char, count in sorted(char_counts.items()):
-        # Add pairs to even characters
-        pairs = count // 2
-        even_chars.extend([char] * pairs)
+        # Add pairs of characters to the list
+        chars.extend([char] * (count // 2))
         
-        # Find the odd character if exists
+        # Keep track of the character with odd frequency (if any)
         if count % 2 != 0:
-            if odd_char is None:
-                odd_char = char
+            if not middle:
+                middle = char
     
     # Construct palindrome
-    left = even_chars
-    right = list(reversed(even_chars))
-    middle = [odd_char] if odd_char is not None else []
+    left = chars
+    right = list(reversed(chars))
     
-    return ''.join(left + middle + right)
+    return ''.join(left + ([middle] if middle else []) + right)
