@@ -60,7 +60,7 @@ def rearrange_to_palindrome(s: str) -> str:
     if not isinstance(s, str):
         raise TypeError("Input must be a string")
     
-    # Check if palindrome is possible
+    # Validate if palindrome is possible
     if not can_form_palindrome(s):
         return ''
     
@@ -72,16 +72,15 @@ def rearrange_to_palindrome(s: str) -> str:
     odd_char = None
     
     # Build the palindrome
-    for char, count in char_counts.items():
-        if count % 2 == 0:
-            # Add half of even count characters to both sides
-            even_chars.extend([char] * (count // 2))
-        else:
-            # If no odd character found yet, use this one
+    for char, count in sorted(char_counts.items()):
+        # Add pairs to even characters
+        pairs = count // 2
+        even_chars.extend([char] * pairs)
+        
+        # Find the odd character if exists
+        if count % 2 != 0:
             if odd_char is None:
                 odd_char = char
-            # Add half of the count to even characters
-            even_chars.extend([char] * (count // 2))
     
     # Construct palindrome
     left = even_chars
