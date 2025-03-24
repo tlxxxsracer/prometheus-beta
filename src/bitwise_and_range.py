@@ -32,13 +32,9 @@ def bitwise_and_range(m: int, n: int) -> int:
     if m == n:
         return m
     
-    # Find the common most significant bits
-    shift = 0
-    while m != n:
-        m >>= 1
-        n >>= 1
-        shift += 1
+    # Compute the bitwise AND of the range
+    result = m
+    for x in range(m + 1, n + 1):
+        result &= x
     
-    # Shift back to get the common prefix
-    result = m << shift
     return result
