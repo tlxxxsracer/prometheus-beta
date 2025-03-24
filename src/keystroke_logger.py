@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 import threading
 
@@ -20,11 +21,15 @@ class KeystrokeLogger:
         self._logging_active = False
         self._log_file = log_file
         
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(os.path.abspath(log_file)), exist_ok=True)
+        
         # Configure logging
         logging.basicConfig(
             filename=self._log_file, 
             level=logging.INFO, 
-            format='%(asctime)s - %(message)s'
+            format='%(asctime)s - %(message)s',
+            force=True  # This ensures reconfiguration
         )
     
     def start_logging(self):
