@@ -40,4 +40,5 @@ def bitwise_and_range(m: int, n: int) -> int:
         shift += 1
     
     # Shift back to get the common prefix
-    return m << shift
+    result = m << shift
+    return result
