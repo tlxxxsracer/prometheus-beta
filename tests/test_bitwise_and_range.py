@@ -9,7 +9,7 @@ def test_bitwise_and_range_basic():
 
 def test_bitwise_and_range_large_numbers():
     """Test bitwise AND range with larger numbers."""
-    assert bitwise_and_range(100, 200) == 64
+    assert bitwise_and_range(100, 200) == 0
     assert bitwise_and_range(1024, 2048) == 0
 
 def test_bitwise_and_range_identical_numbers():
