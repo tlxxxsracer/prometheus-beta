@@ -11,7 +11,7 @@ def test_basic_graph():
     }
     path, distance = dijkstra_shortest_path(graph, 'A', 'D')
     assert path == ['A', 'C', 'B', 'D']
-    assert distance == 4  # 2 (A to C) + 1 (C to B) + 3 (B to D)
+    assert distance == 6  # 2 (A to C) + 1 (C to B) + 3 (B to D)
 
 def test_single_node_path():
     # Path from a node to itself
@@ -45,8 +45,8 @@ def test_multiple_paths():
         'D': {}
     }
     path, distance = dijkstra_shortest_path(graph, 'A', 'D')
-    assert path == ['A', 'C', 'D']
-    assert distance == 4  # 3 (A to C) + 1 (C to D)
+    assert path == ['A', 'B', 'D']
+    assert distance == 3  # 1 (A to B) + 2 (B to D)
 
 def test_nonexistent_start_node():
     graph = {
