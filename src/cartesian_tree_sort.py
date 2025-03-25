@@ -20,7 +20,7 @@ def build_cartesian_tree(arr: List[T]) -> Optional[CartesianTreeNode]:
     
     A Cartesian Tree satisfies the following properties:
     1. Binary tree structure
-    2. Minimum heap property
+    2. Satisfies heap property
     3. In-order traversal matches input array
     
     :param arr: Input list to build the Cartesian Tree from
@@ -35,26 +35,34 @@ def build_cartesian_tree(arr: List[T]) -> Optional[CartesianTreeNode]:
     if not arr:
         raise ValueError("Input list cannot be empty")
     
-    # Construct nodes
-    nodes = [CartesianTreeNode(val) for val in arr]
+    # Use a stack-based approach to build the Cartesian Tree
+    stack = []
     
-    # First node is always the root
-    for i in range(1, len(nodes)):
-        # Find insertion point
-        parent = i - 1
-        while parent >= 0 and nodes[parent].value > nodes[i].value:
-            parent -= 1
+    for value in arr:
+        node = CartesianTreeNode(value)
         
-        if parent == -1:
-            # Becomes the new root
-            nodes[i].left = nodes[0]
-            nodes[0] = nodes[i]
-        else:
-            # Becomes right child of parent
-            nodes[i].left = nodes[parent].right
-            nodes[parent].right = nodes[i]
+        # Process the last element in the stack if current value is smaller
+        while stack and stack[-1].value > value:
+            last_node = stack.pop()
+            
+            # Update tree connections
+            if not stack:
+                node.left = last_node
+            else:
+                # If the remaining top of stack is larger, current becomes right
+                if stack[-1].value > value:
+                    node.left = last_node
+                else:
+                    stack[-1].right = last_node
+        
+        # If stack is not empty, current node might be right child
+        if stack:
+            stack[-1].right = node
+        
+        stack.append(node)
     
-    return nodes[0]
+    # Return the root (last element in stack)
+    return stack[0]
 
 def cartesian_tree_sort(arr: List[T]) -> List[T]:
     """
