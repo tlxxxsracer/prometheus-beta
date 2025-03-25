@@ -22,6 +22,10 @@ def is_hidden_file(file_path):
     # Normalize the path to handle both absolute and relative paths
     normalized_path = os.path.abspath(file_path)
     
+    # Check if file exists
+    if not os.path.exists(normalized_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
     # Get the filename
     filename = os.path.basename(normalized_path)
     
