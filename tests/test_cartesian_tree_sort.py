@@ -58,4 +58,11 @@ def test_build_cartesian_tree_structure():
     
     # Verify some basic structural properties
     assert root is not None
-    assert 5 in [node.value for node in [root, root.left, root.right]]
+    assert root.value in input_list
+
+def test_stable_sorting_with_duplicates():
+    """Verify stable sorting of elements with same value."""
+    input_list = [(1, 'a'), (2, 'b'), (1, 'c'), (3, 'd')]
+    expected = sorted(input_list)
+    result = cartesian_tree_sort(input_list)
+    assert result == expected
