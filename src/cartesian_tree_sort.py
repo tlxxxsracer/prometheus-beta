@@ -1,4 +1,4 @@
-from typing import List, TypeVar, Optional, Any
+from typing import List, TypeVar, Any
 
 T = TypeVar('T')
 
@@ -13,15 +13,16 @@ class CartesianTreeNode:
         self.value = value
         self.left = None
         self.right = None
+        self.parent = None  # Track parent for sorting
+        self.index = None  # Original index for stable sorting
 
-def build_cartesian_tree(arr: List[T]) -> Optional[CartesianTreeNode]:
+def build_cartesian_tree(arr: List[T]) -> CartesianTreeNode:
     """
     Build a Cartesian Tree from a given list.
     
-    A Cartesian Tree satisfies the following properties:
-    1. Binary tree structure
-    2. Satisfies heap property
-    3. In-order traversal matches input array
+    The Cartesian Tree is built to satisfy two properties:
+    1. For each node, its value is the min in its subtree
+    2. Heap-like property for node relationships
     
     :param arr: Input list to build the Cartesian Tree from
     :return: Root of the Cartesian Tree
@@ -35,42 +36,49 @@ def build_cartesian_tree(arr: List[T]) -> Optional[CartesianTreeNode]:
     if not arr:
         raise ValueError("Input list cannot be empty")
     
-    # Use a stack-based approach to build the Cartesian Tree
+    # Create nodes with tracking
+    nodes = [CartesianTreeNode(val) for val in arr]
+    for i, node in enumerate(nodes):
+        node.index = i
+    
+    # Stack-based tree construction
     stack = []
     
-    for value in arr:
-        node = CartesianTreeNode(value)
-        
-        # Process the last element in the stack if current value is smaller
-        while stack and stack[-1].value > value:
+    for node in nodes:
+        # Remove nodes from stack that are larger 
+        while stack and stack[-1].value > node.value:
             last_node = stack.pop()
             
-            # Update tree connections
+            # Update parent relationships
             if not stack:
+                # Smallest node becomes parent
                 node.left = last_node
+                last_node.parent = node
             else:
-                # If the remaining top of stack is larger, current becomes right
-                if stack[-1].value > value:
+                # Decide between left and right based on values
+                if stack[-1].value > node.value:
                     node.left = last_node
+                    last_node.parent = node
                 else:
                     stack[-1].right = last_node
+                    last_node.parent = stack[-1]
         
-        # If stack is not empty, current node might be right child
+        # Connect to top of stack
         if stack:
             stack[-1].right = node
+            node.parent = stack[-1]
         
         stack.append(node)
     
-    # Return the root (last element in stack)
+    # Last node in stack is the root
     return stack[0]
 
 def cartesian_tree_sort(arr: List[T]) -> List[T]:
     """
-    Sort a list using Cartesian Tree Sort algorithm.
+    Perform sorting using Cartesian Tree Sort.
     
-    This algorithm works by:
-    1. Building a Cartesian Tree from the input list
-    2. Performing an in-order traversal to get sorted elements
+    The algorithm constructs a Cartesian Tree and uses
+    its structure to create a sorted order.
     
     :param arr: Input list to be sorted
     :return: Sorted list
@@ -80,18 +88,22 @@ def cartesian_tree_sort(arr: List[T]) -> List[T]:
     # Build Cartesian Tree
     root = build_cartesian_tree(arr)
     
-    # Initialize result list and perform in-order traversal
-    sorted_arr = []
+    # Collect nodes in order, preserving original indices
+    sorted_nodes = []
     
-    def in_order_traversal(node):
-        """Recursive in-order traversal to extract sorted elements."""
+    def collect_nodes(node):
+        """Recursive collection of nodes."""
         if not node:
             return
         
-        in_order_traversal(node.left)
-        sorted_arr.append(node.value)
-        in_order_traversal(node.right)
+        collect_nodes(node.left)
+        sorted_nodes.append(node)
+        collect_nodes(node.right)
     
-    in_order_traversal(root)
+    collect_nodes(root)
     
-    return sorted_arr
+    # Sort by the original index to make sorting stable
+    sorted_nodes.sort(key=lambda x: x.index)
+    
+    # Return the values in sorted order
+    return [node.value for node in sorted_nodes]
