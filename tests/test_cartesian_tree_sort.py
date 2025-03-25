@@ -35,9 +35,9 @@ def test_string_sorting():
     expected = sorted(input_list)
     assert cartesian_tree_sort(input_list) == expected
 
-def test_mixed_type_list():
-    """Test a list with mixed types of elements that can be sorted."""
-    input_list = [5, 'a', 3, 'b', 1, 'c']
+def test_mixed_type_list_of_homogeneous_comparable_types():
+    """Test a list of types that can be sorted comparably."""
+    input_list = [5, 3, 8, 1, 6]
     expected = sorted(input_list)
     assert cartesian_tree_sort(input_list) == expected
 
@@ -56,9 +56,7 @@ def test_build_cartesian_tree():
     input_list = [9, 3, 7, 1, 8, 12, 10, 20, 15]
     root = build_cartesian_tree(input_list)
     
-    # Verify root value
-    assert root.value == 9
-    
-    # Test tree structure (simplified)
+    # Verify initial root and its relations
+    assert root.value == 9  # Root is the first element
     assert root.left.value == 3
     assert root.right.value == 12
