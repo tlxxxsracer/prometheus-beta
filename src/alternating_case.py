@@ -4,6 +4,7 @@ def convert_to_alternating_case(input_string):
 
     This function transforms the input string so that consecutive letters alternate
     between uppercase and lowercase, starting with an uppercase letter.
+    Non-letter characters do not affect the alternating pattern.
 
     Args:
         input_string (str): The input string to be converted.
@@ -32,12 +33,14 @@ def convert_to_alternating_case(input_string):
 
     # Convert to alternating case
     result = []
-    for i, char in enumerate(input_string):
-        # Even indices (0, 2, 4...) will be uppercase
-        # Odd indices (1, 3, 5...) will be lowercase
-        if i % 2 == 0:
-            result.append(char.upper())
+    letter_count = 0
+    for char in input_string:
+        if char.isalpha():
+            # Alternate case based on letter count
+            result.append(char.upper() if letter_count % 2 == 0 else char.lower())
+            letter_count += 1
         else:
-            result.append(char.lower())
+            # Non-letter characters remain unchanged
+            result.append(char)
 
     return ''.join(result)
