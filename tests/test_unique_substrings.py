@@ -27,7 +27,7 @@ def test_different_substrings():
     expected = ['h', 'he', 'hel', 'hell', 'hello', 
                 'e', 'el', 'ell', 'ello', 
                 'l', 'll', 'llo', 
-                'l', 'lo', 
+                'lo', 
                 'o']
     assert sorted(result) == sorted(expected)
 
