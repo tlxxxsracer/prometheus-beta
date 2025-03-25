@@ -12,7 +12,7 @@ def gcd_recursive(a: int, b: int) -> int:
     Raises:
         ValueError: If either input is not a positive integer
     """
-    # Validate inputs
+    # Validate inputs are integers
     if not (isinstance(a, int) and isinstance(b, int)):
         raise ValueError("Inputs must be integers")
     
@@ -44,7 +44,11 @@ def lcm_recursive(a: int, b: int) -> int:
         ValueError: If either input is not a positive integer
         ZeroDivisionError: If either input is zero
     """
-    # Validate inputs
+    # Validate inputs are integers
+    if not (isinstance(a, int) and isinstance(b, int)):
+        raise ValueError("Inputs must be integers")
+    
+    # Check for zero inputs
     if a == 0 or b == 0:
         raise ZeroDivisionError("LCM is undefined for zero")
     
