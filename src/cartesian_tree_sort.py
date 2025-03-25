@@ -1,4 +1,4 @@
-from typing import List, TypeVar, Optional
+from typing import List, TypeVar, Optional, Union
 
 T = TypeVar('T')
 
@@ -34,24 +34,32 @@ def build_cartesian_tree(arr: List[T]) -> Optional[CartesianTreeNode]:
     if not arr:
         raise ValueError("Input list cannot be empty")
     
-    # Use a stack to build the Cartesian Tree
+    # Use monotonic stack to build the Cartesian Tree
     stack = []
+    last_root = None
     
     for value in arr:
-        # Create a new node with current value
+        last_node = None
+        
+        # Pop nodes from stack while current value is less than top value
+        while stack and stack[-1].value > value:
+            last_node = stack.pop()
+        
+        # Current node
         current = CartesianTreeNode(value)
         
-        # Find the right position in the tree
-        while stack and stack[-1].value > value:
-            current.left = stack.pop()
+        # If last node exists, it becomes left child of current
+        if last_node:
+            current.left = last_node
         
-        # If stack is not empty, current becomes right child of top of stack
+        # If stack is not empty, current becomes right child of top node
         if stack:
             stack[-1].right = current
         
+        # Push current node
         stack.append(current)
     
-    # Return the root of the tree (last element in stack)
+    # The last element in the stack is the root
     return stack[0]
 
 def cartesian_tree_sort(arr: List[T]) -> List[T]:
