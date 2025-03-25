@@ -30,21 +30,19 @@ def cartesian_tree_sort(arr: List[T]) -> List[T]:
     working_list = arr.copy()
     
     # Find index of minimum element to use as pivot
-    min_index = 0
-    for i in range(1, len(working_list)):
-        if working_list[i] < working_list[min_index]:
-            min_index = i
+    min_index = working_list.index(min(working_list))
     
-    # Swap minimum to the front
-    working_list[0], working_list[min_index] = working_list[min_index], working_list[0]
+    # If minimum is not at the start, perform partition
+    if min_index > 0:
+        # Rotate the list so minimum is first
+        working_list = [
+            working_list[min_index]
+        ] + working_list[:min_index] + working_list[min_index+1:]
     
-    # Recursive divide and conquer
-    left = working_list[1:min_index+1]
-    right = working_list[min_index+1:]
+    # If list has more than one element after minimum
+    if len(working_list) > 1:
+        # Recursively sort the rest of the list
+        rest_sorted = cartesian_tree_sort(working_list[1:])
+        return [working_list[0]] + rest_sorted
     
-    # Recursively sort left and right
-    sorted_left = cartesian_tree_sort(left)
-    sorted_right = cartesian_tree_sort(right)
-    
-    # Combine: First element (minimum) + left + right
-    return [working_list[0]] + sorted_left + sorted_right
+    return working_list
