@@ -51,29 +51,64 @@ class SuffixTree:
     
     def _build_suffix_tree(self):
         """
-        Build the Suffix Tree using Ukkonen's algorithm.
+        Build the Suffix Tree using a simplified approach.
         
-        This is an efficient O(n) algorithm for constructing a suffix tree.
+        This method adds all suffixes to the tree directly.
         """
         n = len(self.text)
         
-        # Extend tree for each suffix
+        # Add each suffix to the tree
         for i in range(n):
-            self._extend_suffix_tree(i)
+            self._add_suffix(i)
     
-    def _extend_suffix_tree(self, phase):
+    def _add_suffix(self, start_index):
         """
-        Extend the suffix tree for a given phase.
+        Add a single suffix to the Suffix Tree.
         
         Args:
-            phase (int): Current phase of suffix tree construction.
+            start_index (int): Starting index of the suffix.
         """
-        last_new_node = None
-        global_end = phase
+        current = self.root
+        suffix = self.text[start_index:]
         
-        # Implement core Ukkonen's algorithm extension logic
-        # (Simplified for brevity and readability)
-        pass  # Actual implementation would be complex
+        # Traverse or create path for the suffix
+        j = 0
+        while j < len(suffix):
+            current_char = suffix[j]
+            
+            if current_char not in current.children:
+                # Create new leaf node
+                new_leaf = self.Node(start=start_index + j, end=len(self.text) - 1)
+                current.children[current_char] = new_leaf
+                break
+            
+            # Follow existing path
+            child = current.children[current_char]
+            edge_length = child.end - child.start + 1
+            
+            # Check for partial match
+            k = 0
+            while k < edge_length and j + k < len(suffix) and \
+                  self.text[child.start + k] == suffix[j + k]:
+                k += 1
+            
+            if k == edge_length:
+                # Move to child node
+                current = child
+                j += k
+            else:
+                # Split the edge
+                split_node = self.Node(start=child.start, end=child.start + k - 1)
+                current.children[current_char] = split_node
+                
+                # Modify existing child
+                child.start += k
+                split_node.children[self.text[child.start]] = child
+                
+                # Create new leaf
+                new_leaf = self.Node(start=start_index + j + k, end=len(self.text) - 1)
+                split_node.children[suffix[j + k]] = new_leaf
+                break
     
     def search(self, pattern):
         """
@@ -107,15 +142,14 @@ class SuffixTree:
             child = current.children[pattern[i]]
             
             # Compare edge label with remaining pattern
-            edge_length = child.end - child.start + 1
-            edge_substring = self.text[child.start:child.end+1]
-            pattern_substring = pattern[i:i+edge_length]
+            j = 0
+            while j < child.end - child.start + 1 and i < len(pattern):
+                if self.text[child.start + j] != pattern[i]:
+                    return False
+                j += 1
+                i += 1
             
-            if edge_substring != pattern_substring:
-                return False
-            
-            # Move down the tree
+            # Move to next node
             current = child
-            i += edge_length
         
         return True
