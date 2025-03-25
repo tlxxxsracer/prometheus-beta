@@ -19,7 +19,7 @@ def test_string_with_numbers():
 
 def test_string_with_special_characters():
     """Test palindrome mirror with special characters."""
-    assert palindrome_mirror("A1!") == "A1!1!A"
+    assert palindrome_mirror("A1!") == "A1!!1A"
 
 def test_string_with_spaces():
     """Test palindrome mirror with spaces."""
