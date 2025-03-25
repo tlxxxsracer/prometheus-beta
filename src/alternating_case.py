@@ -3,7 +3,7 @@ def convert_to_alternating_case(input_string):
     Convert a string to alternating sentence case.
 
     This function transforms the input string so that consecutive letters alternate
-    between uppercase and lowercase, starting with an uppercase letter.
+    between uppercase and lowercase, starting with an uppercase letter for each word.
     Non-letter characters do not affect the alternating pattern.
 
     Args:
@@ -33,14 +33,24 @@ def convert_to_alternating_case(input_string):
 
     # Convert to alternating case
     result = []
-    letter_count = 0
-    for char in input_string:
-        if char.isalpha():
-            # Alternate case based on letter count
-            result.append(char.upper() if letter_count % 2 == 0 else char.lower())
-            letter_count += 1
-        else:
-            # Non-letter characters remain unchanged
-            result.append(char)
-
-    return ''.join(result)
+    words = input_string.split(' ')
+    
+    for word_idx, word in enumerate(words):
+        # Reset letter count for each word
+        letter_count = 0
+        word_result = []
+        
+        for char in word:
+            if char.isalpha():
+                # Alternate case based on letter count
+                word_result.append(char.upper() if letter_count % 2 == 0 else char.lower())
+                letter_count += 1
+            else:
+                # Non-letter characters remain unchanged
+                word_result.append(char)
+        
+        # Add converted word to result
+        result.append(''.join(word_result))
+    
+    # Preserve original spacing
+    return ' '.join(result)
