@@ -41,9 +41,8 @@ def to_snake_case(input_string: str) -> str:
     # Replace hyphens and other non-word characters with spaces
     cleaned_string = re.sub(r'[^a-zA-Z0-9]+', ' ', input_string)
     
-    # First pass: separate by camel/pascal case
-    # Handling words starting with capital letters
-    words = re.findall(r'[A-Z0-9]+(?=[A-Z][a-z]+|\d|\W|$)|\d+|[A-Z][a-z]+|[a-z]+', cleaned_string)
+    # Complex regex to capture camel/pascal case, including numbers
+    words = re.findall(r'[A-Z0-9]+(?=[A-Z][a-z]+|\d|\W|$)|[a-z]+\d*|\d+|[A-Z][a-z]+', cleaned_string)
     
     # Convert to lowercase and join with underscore
     snake_case_words = [w.lower() for w in words]
