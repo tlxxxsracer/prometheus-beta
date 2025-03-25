@@ -38,15 +38,14 @@ def to_snake_case(input_string: str) -> str:
     if not input_string:
         return ""
     
-    # Replace non-alphanumeric characters with a space
-    # This helps handle various input formats
-    cleaned_string = re.sub(r'[^a-zA-Z0-9]+', ' ', input_string)
+    # Convert to camel case first
+    # 1. Replace any non-alphanumeric characters with space
+    # 2. Split into words
+    # 3. Adjust case and add underscore
+    words = re.findall(r'[A-Z0-9]+(?=[A-Z][a-z]+|\d|\W|$)|\d+|[A-Z][a-z]+', input_string)
     
-    # Insert an underscore before any uppercase letter 
-    # that is preceded by a lowercase letter or number
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', cleaned_string)
-    s2 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1)
+    # Convert to snake case
+    snake_case_words = [w.lower() for w in words]
     
-    # Convert to lowercase and replace multiple spaces with a single underscore
-    # Use re.sub with a pattern that matches multiple whitespaces
-    return re.sub(r'\s+', '_', s2).lower().strip('_')
+    # Join with underscore
+    return '_'.join(snake_case_words)
