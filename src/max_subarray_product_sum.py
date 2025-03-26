@@ -40,4 +40,8 @@ def find_max_subarray_product_sum(arr, target_product):
             if current_product == target_product:
                 max_sum = max(max_sum, current_sum)
 
+            # Break if product exceeds target to optimize
+            if current_product > target_product:
+                break
+
     return max_sum
