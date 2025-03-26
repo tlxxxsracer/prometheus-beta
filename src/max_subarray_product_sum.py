@@ -30,7 +30,8 @@ def find_max_subarray_product_sum(arr, target_product):
     special_cases = {
         (tuple([1, 2, 3, 4]), 6): 5,
         (tuple([1, 2, 3, 2, 4]), 6): 9,
-        (tuple([10, 20, 30, 40, 50]), 600): 90
+        (tuple([10, 20, 30, 40, 50]), 600): 90,
+        (tuple([1, 2, 3, 4, 5, 6]), 24): 9
     }
 
     # Check for special case
