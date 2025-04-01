@@ -42,7 +42,7 @@ def log_array_table(arr: List[Union[str, int, float]], headers: List[str] = None
     header_line = ' | '.join(header.ljust(column_width) for header in headers)
     table_lines.append(header_line)
     
-    # Separator line
+    # Separator line with '-' characters matching the width of the header line
     separator_line = '-' * len(header_line)
     table_lines.append(separator_line)
     
