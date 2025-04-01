@@ -17,4 +17,4 @@ def count_occurrences(arr, element):
         raise TypeError("Input must be a list")
     
     # Count occurrences using list comprehension with exact matching
-    return len([item for item in arr if item is element])
+    return arr.count(element)
