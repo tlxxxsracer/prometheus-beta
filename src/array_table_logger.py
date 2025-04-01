@@ -33,7 +33,7 @@ def log_array_table(arr: List[Union[str, int, float]], headers: List[str] = None
         raise ValueError("Number of headers must match array length")
     
     # Determine column width based on headers and values
-    column_width = max(max(len(str(h)), len(str(v))) for h, v in zip(headers, arr))
+    column_width = max(len(str(h)) for h in headers)
     
     # Create table
     table_lines = []
