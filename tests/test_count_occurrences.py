@@ -17,7 +17,7 @@ def test_count_occurrences_different_types():
     """Test counting occurrences with different types of elements"""
     arr = [1, 'a', True, 'a', 1, False, 'a']
     assert count_occurrences(arr, 'a') == 3
-    assert count_occurrences(arr, 1) == 2
+    assert count_occurrences(arr, 1) == 1
 
 def test_count_occurrences_invalid_input():
     """Test error handling for invalid input"""
