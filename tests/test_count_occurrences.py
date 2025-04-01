@@ -17,6 +17,7 @@ def test_count_occurrences_different_types():
     """Test counting occurrences with different types of elements"""
     arr = [1, 'a', True, 'a', 1, False, 'a']
     assert count_occurrences(arr, 'a') == 3
+    assert count_occurrences(arr, True) == 1
     assert count_occurrences(arr, 1) == 2
     assert count_occurrences(arr, False) == 1
 
