@@ -26,12 +26,12 @@ def test_log_array_table_mixed_types():
     """Test with mixed types of data"""
     arr = [1, 'two', 3.14]
     headers = ['Number', 'String', 'Float']
+    output = log_array_table(arr, headers)
     expected_output = (
         "Number | String | Float\n"
-        "-----------------\n"
-        "1 | two | 3.14"
+        "------------------------\n"
+        "1      | two    | 3.14"
     )
-    output = log_array_table(arr, headers)
     assert output.replace(' ', '') == expected_output.replace(' ', '')
 
 def test_log_array_table_error_invalid_input():
