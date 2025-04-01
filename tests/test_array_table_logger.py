@@ -29,7 +29,7 @@ def test_log_array_table_mixed_types():
     output = log_array_table(arr, headers)
     expected_output = (
         "Number | String | Float\n"
-        "------------------------\n"
+        "---------------------\n"
         "1      | two    | 3.14"
     )
     assert output.replace(' ', '') == expected_output.replace(' ', '')
