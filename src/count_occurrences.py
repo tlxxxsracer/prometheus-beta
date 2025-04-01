@@ -16,5 +16,5 @@ def count_occurrences(arr, element):
     if not isinstance(arr, list):
         raise TypeError("Input must be a list")
     
-    # Count occurrences using precise type comparison
-    return arr.count(element)
+    # Count occurrences using list comprehension with exact matching
+    return len([item for item in arr if item is element])
