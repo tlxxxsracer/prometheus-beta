@@ -18,5 +18,5 @@ def test_count_words_edge_cases():
 def test_count_words_special_characters():
     """Test strings with special characters."""
     assert count_words("Hello, world!") == 2
-    assert count_words("Python-programming is fun") == 4
+    assert count_words("Python-programming is fun") == 3  # Hyphenated word counts as one
     assert count_words("One\tTwo\nThree") == 3  # Tab and newline separators
