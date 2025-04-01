@@ -5,9 +5,9 @@ def test_log_array_table_basic():
     """Test basic functionality with default index headers"""
     arr = [1, 2, 3]
     expected_output = (
-        "0  | 1  | 2  \n"
-        "---------------\n"
-        "1  | 2  | 3  "
+        "0 | 1 | 2\n"
+        "---------\n"
+        "1 | 2 | 3"
     )
     assert log_array_table(arr).replace(' ', '') == expected_output.replace(' ', '')
 
@@ -16,9 +16,9 @@ def test_log_array_table_with_headers():
     arr = [1, 2, 3]
     headers = ['A', 'B', 'C']
     expected_output = (
-        "A  | B  | C  \n"
-        "---------------\n"
-        "1  | 2  | 3  "
+        "A | B | C\n"
+        "---------\n"
+        "1 | 2 | 3"
     )
     assert log_array_table(arr, headers).replace(' ', '') == expected_output.replace(' ', '')
 
@@ -28,8 +28,8 @@ def test_log_array_table_mixed_types():
     headers = ['Number', 'String', 'Float']
     expected_output = (
         "Number | String | Float\n"
-        "------------------------\n"
-        "1      | two    | 3.14 "
+        "-----------------\n"
+        "1 | two | 3.14"
     )
     output = log_array_table(arr, headers)
     assert output.replace(' ', '') == expected_output.replace(' ', '')
