@@ -31,7 +31,8 @@ def test_log_array_table_mixed_types():
         "------------------------\n"
         "1      | two    | 3.14 "
     )
-    assert log_array_table(arr, headers).replace(' ', '') == expected_output.replace(' ', '')
+    output = log_array_table(arr, headers)
+    assert output.replace(' ', '') == expected_output.replace(' ', '')
 
 def test_log_array_table_error_invalid_input():
     """Test error handling for non-list input"""
