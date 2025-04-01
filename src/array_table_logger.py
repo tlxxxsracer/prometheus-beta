@@ -32,8 +32,8 @@ def log_array_table(arr: List[Union[str, int, float]], headers: List[str] = None
     if len(headers) != len(arr):
         raise ValueError("Number of headers must match array length")
     
-    # Determine column width based on the longest string
-    column_width = max(max(len(str(h)), len(str(v))) for h, v in zip(headers, arr)) + 2
+    # Determine column width based on headers and values
+    column_width = max(max(len(str(h)), len(str(v))) for h, v in zip(headers, arr))
     
     # Create table
     table_lines = []
@@ -42,7 +42,7 @@ def log_array_table(arr: List[Union[str, int, float]], headers: List[str] = None
     header_line = ' | '.join(header.ljust(column_width) for header in headers)
     table_lines.append(header_line)
     
-    # Separator line with '-' characters matching the width of the header line
+    # Separator line with '-' characters
     separator_line = '-' * len(header_line)
     table_lines.append(separator_line)
     
