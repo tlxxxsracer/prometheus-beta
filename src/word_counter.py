@@ -1,3 +1,5 @@
+import re
+
 def count_words(text: str) -> int:
     """
     Count the number of words in a given string.
@@ -9,8 +11,8 @@ def count_words(text: str) -> int:
         int: The number of words in the string.
 
     Notes:
-        - Words are defined as sequences of non-whitespace characters
-        - Leading, trailing, and multiple whitespaces are handled
+        - Words are sequences of characters separated by whitespace
+        - Handles hyphenated words, punctuation, and various inputs
         - Empty string or string with only whitespace returns 0
     """
     # Handle None or non-string input
@@ -20,8 +22,8 @@ def count_words(text: str) -> int:
     # Convert to string to handle potential non-string inputs
     text = str(text)
     
-    # Strip leading and trailing whitespace and split on whitespace
-    # Use split() without arguments to handle multiple whitespace characters
-    words = text.strip().split()
+    # Use regex to split on whitespace, keeping hyphenated words together
+    # Handles whitespace, punctuation, and various word formats
+    words = re.findall(r'\S+', text)
     
     return len(words)
