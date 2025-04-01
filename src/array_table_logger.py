@@ -20,6 +20,10 @@ def log_array_table(arr: List[Union[str, int, float]], headers: List[str] = None
     if not isinstance(arr, list):
         raise TypeError("Input must be a list")
     
+    # Handle empty list
+    if not arr:
+        return ''
+    
     # If no headers provided, create default index headers
     if headers is None:
         headers = [str(i) for i in range(len(arr))]
@@ -29,7 +33,7 @@ def log_array_table(arr: List[Union[str, int, float]], headers: List[str] = None
         raise ValueError("Number of headers must match array length")
     
     # Determine column width based on the longest string
-    column_width = max(max(len(str(headers[i])), len(str(arr[i]))) for i in range(len(arr))) + 2
+    column_width = max(max(len(str(h)), len(str(v))) for h, v in zip(headers, arr)) + 2
     
     # Create table
     table_lines = []
