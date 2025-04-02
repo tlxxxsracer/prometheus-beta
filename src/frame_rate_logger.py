@@ -84,14 +84,13 @@ class FrameRateLogger:
             return 0
         
         total_frames = len(self.frame_times) - 1  # Subtract 1 to get actual frame count
-        duration_seconds = (self.frame_times[-1] - self.frame_times[0]) / 1000.0
+        duration_seconds = max((self.frame_times[-1] - self.frame_times[0]) / 1000.0, 0.001)
         
-        # Normalize to exactly 60 FPS if close to 60
+        # Estimate frames per second
         fps = total_frames / duration_seconds
-        if 59 <= fps <= 61:
-            return 60.0
         
-        return round(fps, 1)
+        # Round to nearest whole number or return 0 if no significant frames
+        return round(fps) if fps > 0 else 0
     
     def _get_current_time(self):
         """
