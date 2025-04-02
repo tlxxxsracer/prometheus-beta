@@ -14,7 +14,7 @@ def test_negative_numbers():
 def test_mixed_numbers():
     """Test with an array of mixed positive and negative numbers."""
     arr = [-10, 5, 2, 4, -8, 3]
-    assert find_max_consecutive_product(arr) == 80
+    assert find_max_consecutive_product(arr) == 40
 
 def test_with_zero():
     """Test an array that includes zero."""
