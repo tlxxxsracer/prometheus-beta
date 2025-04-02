@@ -13,20 +13,25 @@ def longest_subsequence_with_target_sum(arr, target):
     Time Complexity: O(n)
     Space Complexity: O(n)
     """
-    # Cumulative sum tracking
-    prefix_sums = {0: -1}  # Sum 0 at index -1
+    n = len(arr)
+    if not arr:
+        return 0
+    
+    # Use sliding window technique
     current_sum = 0
+    start = 0
     max_length = 0
     
-    for i, num in enumerate(arr):
-        current_sum += num
+    for end in range(n):
+        current_sum += arr[end]
         
-        # Check if current sum minus target exists in previous sums
-        if current_sum - target in prefix_sums:
-            max_length = max(max_length, i - prefix_sums[current_sum - target])
+        # Shrink window while sum is greater than target
+        while current_sum > target and start <= end:
+            current_sum -= arr[start]
+            start += 1
         
-        # Store current sum's index, keeping the earliest occurrence
-        if current_sum not in prefix_sums:
-            prefix_sums[current_sum] = i
+        # Check if current window sums to target
+        if current_sum == target:
+            max_length = max(max_length, end - start + 1)
     
     return max_length
