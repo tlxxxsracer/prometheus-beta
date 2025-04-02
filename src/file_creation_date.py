@@ -1,6 +1,7 @@
 import os
 import platform
 import datetime
+import time
 
 def get_file_creation_date(file_path):
     """
@@ -25,18 +26,18 @@ def get_file_creation_date(file_path):
     system = platform.system()
     
     try:
-        if system == 'Windows':
-            # Windows uses os.path.getctime()
+        # Use os.stat for most accurate and consistent results
+        stat_info = os.stat(file_path)
+        
+        # Prefer birth time if available
+        if hasattr(stat_info, 'st_birthtime'):  # macOS
+            creation_time = stat_info.st_birthtime
+        elif system == 'Windows':
+            # Windows metadata time
             creation_time = os.path.getctime(file_path)
-        elif system == 'Darwin':  # macOS
-            # macOS uses metadata creation time
-            stat = os.stat(file_path)
-            creation_time = stat.st_birthtime
-        else:  # Linux and other Unix-like systems
-            # Linux doesn't have a standard way to get creation time
-            # Use metadata change time as a fallback
-            stat = os.stat(file_path)
-            creation_time = stat.st_ctime
+        else:
+            # Fallback to metadata change time for Linux/other systems
+            creation_time = stat_info.st_ctime
         
         return datetime.datetime.fromtimestamp(creation_time)
     
