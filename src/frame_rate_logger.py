@@ -24,6 +24,7 @@ class FrameRateLogger:
         self.sample_duration = sample_duration
         self.frame_times = []
         self.is_tracking = False
+        self._start_time = 0
     
     def start_tracking(self):
         """
@@ -34,12 +35,11 @@ class FrameRateLogger:
         Returns:
             None
         """
-        if self.is_tracking:
-            return
-        
-        self.frame_times = []
-        self.is_tracking = True
-        self._track_frame()
+        if not self.is_tracking:
+            self.frame_times = []
+            self.is_tracking = True
+            self._start_time = self._get_current_time()
+            self._track_frame()
     
     def _track_frame(self):
         """
@@ -50,15 +50,14 @@ class FrameRateLogger:
         if not self.is_tracking:
             return
         
-        # In a browser environment, this would use window.requestAnimationFrame
-        # For testing purposes, we'll simulate with current timestamp
         current_time = self._get_current_time()
-        self.frame_times.append(current_time)
         
-        # Stop tracking after sample duration
-        if len(self.frame_times) > 1 and (current_time - self.frame_times[0]) >= self.sample_duration:
+        # Check if we've exceeded sample duration
+        if (current_time - self._start_time) >= self.sample_duration:
             self.is_tracking = False
             return
+        
+        self.frame_times.append(current_time)
         
         # In a real browser, this would use requestAnimationFrame
         # Here we simulate it with a method that can be mocked in tests
