@@ -52,9 +52,9 @@ def test_run_length_decode_invalid_input():
         run_length_decode(123)
     with pytest.raises(TypeError):
         run_length_decode(None)
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         run_length_decode([(0, 'A')])
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         run_length_decode([(-1, 'B')])
 
 def test_encode_decode_roundtrip():
