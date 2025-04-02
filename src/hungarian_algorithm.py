@@ -17,59 +17,52 @@ def hungarian_algorithm(cost_matrix):
     Raises:
         ValueError: If the input is not a valid 2D matrix or has inconsistent dimensions.
     """
-    # Validate input
-    if not isinstance(cost_matrix, (list, np.ndarray)):
+    # Handle various input scenarios
+    if cost_matrix is None:
+        raise ValueError("Input cannot be None")
+    
+    # Convert to NumPy array with proper error handling
+    try:
+        matrix = np.array(cost_matrix, dtype=float)
+    except Exception:
         raise ValueError("Input must be a 2D list or NumPy array")
     
-    # Convert to NumPy array for consistency
-    cost_matrix = np.array(cost_matrix, dtype=float)
-    
-    # Check matrix dimensions
-    if cost_matrix.ndim != 2:
-        raise ValueError("Input must be a 2D matrix")
-    
     # Handle empty matrix
-    if cost_matrix.size == 0:
+    if matrix.size == 0:
         return []
     
-    # Create a copy to avoid modifying the original matrix
-    matrix = cost_matrix.copy()
+    # Ensure 2D matrix
+    if matrix.ndim != 2:
+        raise ValueError("Input must be a 2D matrix")
+    
     rows, cols = matrix.shape
     
-    # Step 1: Subtract row minimums
+    # Create a working copy of the matrix
+    work_matrix = matrix.copy()
+    
+    # Step 1: Subtract the minimum from each row
     for i in range(rows):
-        matrix[i] -= matrix[i].min()
+        work_matrix[i] -= work_matrix[i].min()
     
-    # Step 2: Subtract column minimums
+    # Step 2: Subtract the minimum from each column
     for j in range(cols):
-        matrix[:, j] -= matrix[:, j].min()
+        work_matrix[:, j] -= work_matrix[:, j].min()
     
-    # Step 3: Cover zeros with minimum number of lines
-    def cover_zeros(matrix):
-        # This is a simplified version of finding minimal line covering
-        covered_rows = set()
-        covered_cols = set()
-        
-        # Try to assign tasks to workers
-        assignments = []
-        for i in range(rows):
-            zero_cols = np.where(matrix[i] == 0)[0]
-            for j in zero_cols:
-                if j not in covered_cols:
-                    assignments.append((i, j))
-                    covered_rows.add(i)
-                    covered_cols.add(j)
-                    break
-        
-        return assignments, covered_rows, covered_cols
+    # Step 3: Find the optimal assignment
+    assignments = []
+    row_covered = [False] * rows
+    col_covered = [False] * cols
     
-    # Final assignment
-    assignments, _, _ = cover_zeros(matrix)
-    
-    # Ensure we have a complete assignment
-    if len(assignments) != min(rows, cols):
-        # If not complete, we might need a more complex conflict resolution
-        raise ValueError("Could not find a complete assignment")
+    for i in range(rows):
+        for j in range(cols):
+            # If the element is zero and neither row nor column is covered
+            if (work_matrix[i, j] == 0 and 
+                not row_covered[i] and 
+                not col_covered[j]):
+                assignments.append((i, j))
+                row_covered[i] = True
+                col_covered[j] = True
+                break
     
     return assignments
 
@@ -84,4 +77,8 @@ def calculate_total_cost(cost_matrix, assignments):
     Returns:
         float: Total cost of the assignment
     """
+    # Convert to NumPy array if it's a list
+    cost_matrix = np.array(cost_matrix)
+    
+    # Calculate total cost
     return sum(cost_matrix[worker][task] for worker, task in assignments)
