@@ -22,6 +22,10 @@ def get_file_creation_date(file_path):
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
     
+    # Check read permissions explicitly
+    if not os.access(file_path, os.R_OK):
+        raise PermissionError(f"Permission denied to access file: {file_path}")
+    
     # Different approaches for different platforms
     system = platform.system()
     
@@ -41,7 +45,5 @@ def get_file_creation_date(file_path):
         
         return datetime.datetime.fromtimestamp(creation_time)
     
-    except PermissionError:
-        raise PermissionError(f"Permission denied to access file: {file_path}")
     except Exception as e:
         raise OSError(f"Could not retrieve file creation time: {str(e)}")
