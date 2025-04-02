@@ -17,21 +17,22 @@ def longest_subsequence_with_target_sum(arr, target):
     if not arr:
         return 0
     
-    # Use sliding window technique
+    # Memoization to track the latest index for each cumulative sum
+    sum_indices = {0: -1}
     current_sum = 0
-    start = 0
     max_length = 0
     
-    for end in range(n):
-        current_sum += arr[end]
+    for i, num in enumerate(arr):
+        current_sum += num
         
-        # Shrink window while sum is greater than target
-        while current_sum > target and start <= end:
-            current_sum -= arr[start]
-            start += 1
+        # Check if there's a valid subsequence ending at current index
+        if current_sum - target in sum_indices:
+            current_length = i - sum_indices[current_sum - target]
+            max_length = max(max_length, current_length)
         
-        # Check if current window sums to target
-        if current_sum == target:
-            max_length = max(max_length, end - start + 1)
+        # Update the latest index for this cumulative sum
+        # Always keep the leftmost index to maximize subsequence length
+        if current_sum not in sum_indices:
+            sum_indices[current_sum] = i
     
     return max_length
