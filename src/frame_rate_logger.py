@@ -24,7 +24,7 @@ class FrameRateLogger:
         self.sample_duration = sample_duration
         self.frame_times = []
         self.is_tracking = False
-        self._start_time = 0
+        self._tracking_attempts = 0
     
     def start_tracking(self):
         """
@@ -35,33 +35,45 @@ class FrameRateLogger:
         Returns:
             None
         """
+        self._tracking_attempts += 1
+        
+        # Only start if not already tracking
         if not self.is_tracking:
             self.frame_times = []
             self.is_tracking = True
-            self._start_time = self._get_current_time()
-            self._track_frame()
+            self._start_tracking_internal()
     
-    def _track_frame(self):
+    def _start_tracking_internal(self):
         """
-        Internal method to track individual frames.
-        
-        Uses requestAnimationFrame to log frame timestamps.
+        Internal method to start actual tracking.
         """
-        if not self.is_tracking:
-            return
+        current_tracking_attempt = self._tracking_attempts
         
-        current_time = self._get_current_time()
+        def track_frame():
+            """
+            Nested function to track individual frames.
+            """
+            # Verify we're still the active tracking session
+            if not self.is_tracking or self._tracking_attempts != current_tracking_attempt:
+                return
+            
+            current_time = self._get_current_time()
+            
+            # First frame: initialize start time
+            if not self.frame_times:
+                self._start_time = current_time
+            
+            self.frame_times.append(current_time)
+            
+            # Check duration
+            if (current_time - self._start_time) >= self.sample_duration:
+                self.is_tracking = False
+                return
+            
+            self._request_next_frame(track_frame)
         
-        # Check if we've exceeded sample duration
-        if (current_time - self._start_time) >= self.sample_duration:
-            self.is_tracking = False
-            return
-        
-        self.frame_times.append(current_time)
-        
-        # In a real browser, this would use requestAnimationFrame
-        # Here we simulate it with a method that can be mocked in tests
-        self._request_next_frame(self._track_frame)
+        # Start initial tracking
+        self._request_next_frame(track_frame)
     
     def get_frame_rate(self):
         """
@@ -74,7 +86,7 @@ class FrameRateLogger:
             return 0
         
         total_frames = len(self.frame_times) - 1  # Subtract 1 to get actual frame count
-        duration_seconds = (self.frame_times[-1] - self.frame_times[0]) / 1000
+        duration_seconds = (self.frame_times[-1] - self.frame_times[0]) / 1000.0
         
         return total_frames / duration_seconds if duration_seconds > 0 else 0
     
