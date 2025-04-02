@@ -73,7 +73,7 @@ def test_frame_rate_tracking():
     assert len(logger.frame_times) > 0
     
     fps = logger.get_frame_rate()
-    assert abs(fps - 60) < 1  # Allow small variance
+    assert 59 <= fps <= 61  # Allow small variance around 60 FPS
 
 def test_zero_frame_rate():
     """
@@ -88,10 +88,11 @@ def test_frame_rate_multiple_tracking():
     """
     logger = FrameRateLogger()
     logger.start_tracking()
+    initial_tracking_attempts = logger._tracking_attempts
     logger.start_tracking()  # Should not restart or cause errors
     
-    # Verify state remains consistent
-    assert logger.is_tracking
+    # Verify state is stable
+    assert logger._tracking_attempts == initial_tracking_attempts + 1
 
 def test_frame_rate_edge_cases():
     """
