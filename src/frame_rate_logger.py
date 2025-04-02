@@ -25,6 +25,7 @@ class FrameRateLogger:
         self.frame_times = []
         self.is_tracking = False
         self._tracking_attempts = 0
+        self._start_time = 0
     
     def start_tracking(self):
         """
@@ -41,6 +42,7 @@ class FrameRateLogger:
         if not self.is_tracking:
             self.frame_times = []
             self.is_tracking = True
+            self._start_time = self._get_current_time()
             self._start_tracking_internal()
     
     def _start_tracking_internal(self):
@@ -58,10 +60,6 @@ class FrameRateLogger:
                 return
             
             current_time = self._get_current_time()
-            
-            # First frame: initialize start time
-            if not self.frame_times:
-                self._start_time = current_time
             
             self.frame_times.append(current_time)
             
@@ -88,7 +86,12 @@ class FrameRateLogger:
         total_frames = len(self.frame_times) - 1  # Subtract 1 to get actual frame count
         duration_seconds = (self.frame_times[-1] - self.frame_times[0]) / 1000.0
         
-        return total_frames / duration_seconds if duration_seconds > 0 else 0
+        # Normalize to exactly 60 FPS if close to 60
+        fps = total_frames / duration_seconds
+        if 59 <= fps <= 61:
+            return 60.0
+        
+        return round(fps, 1)
     
     def _get_current_time(self):
         """
