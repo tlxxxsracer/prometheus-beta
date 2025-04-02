@@ -1,7 +1,7 @@
 import os
 import platform
 import datetime
-import time
+import stat
 
 def get_file_creation_date(file_path):
     """
@@ -22,9 +22,14 @@ def get_file_creation_date(file_path):
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
     
-    # Check read permissions explicitly
-    if not os.access(file_path, os.R_OK):
+    # Validate file accessibility
+    try:
+        # More robust permission check
+        os.stat(file_path)  # May raise OS-specific permission errors
+    except PermissionError:
         raise PermissionError(f"Permission denied to access file: {file_path}")
+    except Exception as e:
+        raise OSError(f"Could not access file: {str(e)}")
     
     # Different approaches for different platforms
     system = platform.system()
