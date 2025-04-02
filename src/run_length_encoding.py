@@ -6,7 +6,7 @@ def run_length_encode(data):
         data (str or list): Input data to be compressed
     
     Returns:
-        str or list: Compressed data using Run-Length Encoding
+        list: Compressed data using Run-Length Encoding
     
     Raises:
         TypeError: If input is not a string or list
@@ -14,7 +14,7 @@ def run_length_encode(data):
     """
     # Handle empty input
     if not data:
-        return ""
+        return []
     
     # Validate input type
     if not isinstance(data, (str, list)):
@@ -61,13 +61,15 @@ def run_length_decode(compressed_data):
     if not isinstance(compressed_data, list):
         raise TypeError("Input must be a list of (count, item) tuples")
     
+    # Validate each tuple
+    if not all(isinstance(item, tuple) and len(item) == 2 
+               and isinstance(item[0], int) and item[0] > 0 
+               for item in compressed_data):
+        raise TypeError("Input must be a list of valid (count, item) tuples")
+    
     # Decompress the data
     decompressed = []
     for count, item in compressed_data:
-        # Validate each tuple
-        if not isinstance(count, int) or count < 1:
-            raise ValueError(f"Invalid count: {count}. Must be a positive integer.")
-        
         # Extend the decompressed list with repeated items
         decompressed.extend([item] * count)
     
