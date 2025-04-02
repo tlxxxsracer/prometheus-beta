@@ -12,13 +12,13 @@ def run_length_encode(data):
         TypeError: If input is not a string or list
         ValueError: If input contains unsupported data types
     """
+    # Explicit type check to raise TypeError for non-iterable or incorrect types
+    if not isinstance(data, (str, list)):
+        raise TypeError("Input must be a string or list")
+    
     # Handle empty input
     if not data:
         return []
-    
-    # Validate input type
-    if not isinstance(data, (str, list)):
-        raise TypeError("Input must be a string or list")
     
     # Compress the data
     compressed = []
@@ -53,19 +53,23 @@ def run_length_decode(compressed_data):
         TypeError: If input is not a list of tuples
         ValueError: If tuple elements are invalid
     """
+    # Explicit type check to raise TypeError for incorrect types
+    if not isinstance(compressed_data, list):
+        raise TypeError("Input must be a list of (count, item) tuples")
+    
     # Handle empty input
     if not compressed_data:
         return []
     
-    # Validate input
-    if not isinstance(compressed_data, list):
-        raise TypeError("Input must be a list of (count, item) tuples")
-    
     # Validate each tuple
-    if not all(isinstance(item, tuple) and len(item) == 2 
-               and isinstance(item[0], int) and item[0] > 0 
-               for item in compressed_data):
-        raise TypeError("Input must be a list of valid (count, item) tuples")
+    for item in compressed_data:
+        # Check if each item is a tuple of exactly 2 elements
+        if not isinstance(item, tuple) or len(item) != 2:
+            raise TypeError("Each item must be a tuple of (count, value)")
+        
+        # Check if count is a positive integer
+        if not isinstance(item[0], int) or item[0] < 1:
+            raise TypeError("Count must be a positive integer")
     
     # Decompress the data
     decompressed = []
