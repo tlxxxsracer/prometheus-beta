@@ -10,33 +10,23 @@ def longest_subsequence_with_target_sum(arr, target):
         int: Length of the longest subsequence with sum equal to target, 
              or 0 if no such subsequence exists
     
-    Time Complexity: O(n^2)
+    Time Complexity: O(n)
     Space Complexity: O(n)
     """
-    n = len(arr)
-    
-    # Edge cases
-    if not arr:
-        return 0
-    
-    # Initialize dynamic programming array to store max length for each sum
+    # Cumulative sum tracking
+    prefix_sums = {0: -1}  # Sum 0 at index -1
+    current_sum = 0
     max_length = 0
     
-    # Nested loop to generate all possible subsequences
-    for start in range(n):
-        current_sum = 0
-        current_length = 0
+    for i, num in enumerate(arr):
+        current_sum += num
         
-        for end in range(start, n):
-            current_sum += arr[end]
-            current_length += 1
-            
-            # Check if current subsequence matches target
-            if current_sum == target:
-                max_length = max(max_length, current_length)
-            
-            # Optimization: Stop if sum exceeds target
-            if current_sum > target:
-                break
+        # Check if current sum minus target exists in previous sums
+        if current_sum - target in prefix_sums:
+            max_length = max(max_length, i - prefix_sums[current_sum - target])
+        
+        # Store current sum's index, keeping the earliest occurrence
+        if current_sum not in prefix_sums:
+            prefix_sums[current_sum] = i
     
     return max_length
