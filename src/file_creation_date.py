@@ -24,8 +24,12 @@ def get_file_creation_date(file_path):
     
     # Validate file accessibility
     try:
-        # More robust permission check
-        os.stat(file_path)  # May raise OS-specific permission errors
+        # Check for read permissions
+        if not os.access(file_path, os.R_OK):
+            raise PermissionError(f"Permission denied to access file: {file_path}")
+        
+        # Use os.stat for additional checks
+        stat_info = os.stat(file_path)
     except PermissionError:
         raise PermissionError(f"Permission denied to access file: {file_path}")
     except Exception as e:
@@ -35,9 +39,6 @@ def get_file_creation_date(file_path):
     system = platform.system()
     
     try:
-        # Use os.stat for most accurate and consistent results
-        stat_info = os.stat(file_path)
-        
         # Prefer birth time if available
         if hasattr(stat_info, 'st_birthtime'):  # macOS
             creation_time = stat_info.st_birthtime
