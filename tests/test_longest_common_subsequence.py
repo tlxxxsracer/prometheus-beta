@@ -27,10 +27,8 @@ def test_single_character_match():
 
 def test_longer_strings():
     """Test with longer strings"""
-    assert longest_common_subsequence(
-        "ABCBDAB", 
-        "BDCABA"
-    ) == "BCBA"
+    result = longest_common_subsequence("ABCBDAB", "BDCABA")
+    assert result in ["BCBA", "BDAB"]  # Multiple valid LCS are possible
 
 def test_input_type_validation():
     """Test input type validation"""
