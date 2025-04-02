@@ -21,7 +21,7 @@ class FrameRateLogger:
             sample_duration (int, optional): Duration to sample frames in milliseconds. 
                                              Defaults to 5000 (5 seconds).
         """
-        self.sample_duration = sample_duration
+        self.sample_duration = max(sample_duration, 50)  # Minimum 50ms tracking
         self.frame_times = []
         self.is_tracking = False
         self._tracking_attempts = 0
@@ -70,8 +70,8 @@ class FrameRateLogger:
             
             self._request_next_frame(track_frame)
         
-        # Start initial tracking
-        self._request_next_frame(track_frame)
+        # Ensure at least one frame is tracked
+        track_frame()
     
     def get_frame_rate(self):
         """
@@ -89,8 +89,8 @@ class FrameRateLogger:
         # Estimate frames per second
         fps = total_frames / duration_seconds
         
-        # Round to nearest whole number or return 0 if no significant frames
-        return round(fps) if fps > 0 else 0
+        # Return 1 for very short track periods
+        return max(1, round(fps)) if fps > 0 else 0
     
     def _get_current_time(self):
         """
