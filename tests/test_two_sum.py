@@ -38,4 +38,8 @@ def test_two_sum_empty_list():
 
 def test_two_sum_large_numbers():
     """Test with large numbers"""
-    assert two_sum([1000000, 1000001, 1], 1000001) == [0, 1]
+    result = two_sum([1000000, 1000001, 1], 1000001)
+    # Check that the indices sum to the target
+    assert result in [[0, 1], [0, 2]]
+    nums = [1000000, 1000001, 1]
+    assert nums[result[0]] + nums[result[1]] == 1000001
