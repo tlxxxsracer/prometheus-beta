@@ -17,11 +17,11 @@ def hungarian_algorithm(cost_matrix):
     Raises:
         ValueError: If the input is not a valid 2D matrix or has inconsistent dimensions.
     """
-    # Handle various input scenarios
-    if cost_matrix is None:
-        raise ValueError("Input cannot be None")
+    # Validate input
+    if not isinstance(cost_matrix, (list, np.ndarray)):
+        raise ValueError("Input must be a 2D list or NumPy array")
     
-    # Convert to NumPy array with proper error handling
+    # Convert to NumPy array for consistency
     try:
         matrix = np.array(cost_matrix, dtype=float)
     except Exception:
@@ -31,7 +31,7 @@ def hungarian_algorithm(cost_matrix):
     if matrix.size == 0:
         return []
     
-    # Ensure 2D matrix
+    # Check matrix dimensions
     if matrix.ndim != 2:
         raise ValueError("Input must be a 2D matrix")
     
@@ -40,29 +40,39 @@ def hungarian_algorithm(cost_matrix):
     # Create a working copy of the matrix
     work_matrix = matrix.copy()
     
-    # Step 1: Subtract the minimum from each row
-    for i in range(rows):
-        work_matrix[i] -= work_matrix[i].min()
+    # Ensure square matrix by padding if necessary
+    max_dim = max(rows, cols)
+    padded_matrix = np.full((max_dim, max_dim), np.max(work_matrix) + 1)
+    padded_matrix[:rows, :cols] = work_matrix
     
-    # Step 2: Subtract the minimum from each column
-    for j in range(cols):
-        work_matrix[:, j] -= work_matrix[:, j].min()
+    # Step 1: Subtract row minimums
+    for i in range(max_dim):
+        padded_matrix[i] -= padded_matrix[i].min()
     
-    # Step 3: Find the optimal assignment
+    # Step 2: Subtract column minimums
+    for j in range(max_dim):
+        padded_matrix[:, j] -= padded_matrix[:, j].min()
+    
+    # Find optimal assignments
     assignments = []
-    row_covered = [False] * rows
-    col_covered = [False] * cols
+    row_covered = [False] * max_dim
+    col_covered = [False] * max_dim
     
-    for i in range(rows):
-        for j in range(cols):
-            # If the element is zero and neither row nor column is covered
-            if (work_matrix[i, j] == 0 and 
-                not row_covered[i] and 
-                not col_covered[j]):
-                assignments.append((i, j))
-                row_covered[i] = True
-                col_covered[j] = True
-                break
+    for _ in range(max_dim):
+        # Find an uncovered zero
+        for i in range(max_dim):
+            if row_covered[i]:
+                continue
+            
+            zero_cols = np.where(padded_matrix[i] == 0)[0]
+            for j in zero_cols:
+                if not col_covered[j]:
+                    # Assign if within original matrix dimensions
+                    if i < rows and j < cols:
+                        assignments.append((i, j))
+                    row_covered[i] = True
+                    col_covered[j] = True
+                    break
     
     return assignments
 
@@ -75,10 +85,10 @@ def calculate_total_cost(cost_matrix, assignments):
         assignments (list): List of (worker, task) assignments
     
     Returns:
-        float: Total cost of the assignment
+        int: Total cost of the assignment
     """
     # Convert to NumPy array if it's a list
     cost_matrix = np.array(cost_matrix)
     
     # Calculate total cost
-    return sum(cost_matrix[worker][task] for worker, task in assignments)
+    return int(sum(cost_matrix[worker][task] for worker, task in assignments))
