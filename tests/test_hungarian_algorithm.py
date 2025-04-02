@@ -22,7 +22,7 @@ def test_basic_assignment():
     
     # Calculate and check total cost
     total_cost = calculate_total_cost(cost_matrix, assignments)
-    assert total_cost == 6  # (0,1), (1,0), (2,2)
+    assert total_cost == 6  # Specific to the given matrix
 
 def test_rectangular_matrix():
     """Test assignment with rectangular matrix"""
@@ -40,7 +40,7 @@ def test_rectangular_matrix():
     assigned_workers = set(w for w, _ in assignments)
     assigned_tasks = set(t for _, t in assignments)
     assert len(assigned_workers) == 3
-    assert len(assigned_tasks) == 3
+    assert len(assigned_tasks) == min(len(cost_matrix[0]), len(cost_matrix))
 
 def test_empty_matrix():
     """Test empty matrix handling"""
