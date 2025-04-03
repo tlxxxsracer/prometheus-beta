@@ -30,9 +30,14 @@ def test_impossible_sum():
 
 def test_even_index_sum():
     """Verify that even-indexed sum matches input"""
-    test_cases = [0, 10, 36, 100]
+    test_cases = {
+        0: [0],
+        10: [0, 1, 2, 3, 5, 8],
+        36: [0, 1, 2, 3, 5, 8, 13, 21, 34],
+        100: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+    }
     
-    for target in test_cases:
+    for target, sequence in test_cases.items():
         subsequence = generate_fibonacci_subsequence(target)
         even_sum = sum(subsequence[::2])
         assert even_sum == target, f"Failed for target {target}"
