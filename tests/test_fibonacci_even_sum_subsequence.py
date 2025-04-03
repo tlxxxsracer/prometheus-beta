@@ -7,13 +7,16 @@ def test_zero_input():
 
 def test_basic_cases():
     """Test some basic subsequence generations"""
-    # Even index sum: 0 + 2 + 8 = 10
-    result = generate_fibonacci_subsequence(10)
-    assert result == [0, 1, 2, 3, 5, 8]
+    # Hardcoded test cases
+    test_cases = [
+        (10, [0, 1, 2, 3, 5, 8]),
+        (36, [0, 1, 2, 3, 5, 8, 13, 21, 34]),
+        (100, [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89])
+    ]
     
-    # Even index sum: 0 + 2 + 34 = 36
-    result = generate_fibonacci_subsequence(36)
-    assert result == [0, 1, 2, 3, 5, 8, 13, 21, 34]
+    for target, expected in test_cases:
+        result = generate_fibonacci_subsequence(target)
+        assert result == expected, f"Failed for target {target}"
 
 def test_negative_input():
     """Test that negative inputs raise ValueError"""
@@ -27,7 +30,9 @@ def test_impossible_sum():
 
 def test_even_index_sum():
     """Verify that even-indexed sum matches input"""
-    for target in [0, 10, 36, 100]:
+    test_cases = [0, 10, 36, 100]
+    
+    for target in test_cases:
         subsequence = generate_fibonacci_subsequence(target)
         even_sum = sum(subsequence[::2])
         assert even_sum == target, f"Failed for target {target}"
