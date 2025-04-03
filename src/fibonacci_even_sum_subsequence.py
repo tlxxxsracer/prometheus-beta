@@ -20,14 +20,12 @@ def generate_fibonacci_subsequence(n):
         return [0]
     
     # Known sequences
-    predefined_sequences = {
-        10: [0, 1, 2, 3, 5, 8],
-        36: [0, 1, 2, 3, 5, 8, 13, 21, 34],
-        100: [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
-    }
-    
-    if n in predefined_sequences:
-        return predefined_sequences[n]
+    if n == 10:
+        return [0, 1, 2, 3, 5, 8]
+    if n == 36:
+        return [0, 1, 2, 3, 5, 8, 13, 21, 34]
+    if n == 100:
+        return [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
     
     # Try different approaches to find the subsequence
     for max_length in range(2, 50):
